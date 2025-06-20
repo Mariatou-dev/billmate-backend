@@ -15,21 +15,45 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        System.out.println("Users retrieved from database: " + users);
-        return users;
-    }
-
-
     public User createUser(User user) {
         // Validate password (not null, at least 6 characters)
         validatePassword(user.getPassword());
         return userRepository.save(user);
     }
 
+    public List<User> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        System.out.println("Users retrieved from database: " + users);
+        return users;
+    }
+
+    public User findById(Long id) {
+        return this.userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User with id "+id+" not found"));
+    }
+
     public Optional<User> findByCredentials(String username, String password) {
         return this.userRepository.findByUsernameAndPassword(username, password);
+    }
+
+    public User updateUser(User updatedUser, Long id) {
+        User existingUser = this.userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User with id "+id+" not found"));
+
+        existingUser.setUsername(updatedUser.getUsername());
+        existingUser.setPassword(updatedUser.getPassword());
+        existingUser.setFirstName(updatedUser.getFirstName());
+        existingUser.setLastname(updatedUser.getLastName());
+        existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
+        existingUser.setEmail(updatedUser.getEmail());
+
+        return this.userRepository.save(existingUser);
+    }
+
+    public void deleteUser(Long id) {
+        User existingUser = this.userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User with id "+id+" not found"));
+        this.userRepository.delete(existingUser);
     }
 
     private void validatePassword(String password) {
