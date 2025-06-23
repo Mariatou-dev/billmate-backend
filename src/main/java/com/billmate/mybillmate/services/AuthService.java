@@ -15,6 +15,6 @@ public class AuthService {
     }
 
     public Optional<User> findByCredentials(String username, String password) {
-        return userService.findByCredentials(username, password);
+        return this.userService.findByCredentials(username, password);
     }
 }

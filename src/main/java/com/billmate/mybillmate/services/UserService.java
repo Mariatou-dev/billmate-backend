@@ -16,13 +16,13 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        // Validate password (not null, at least 6 characters)
+        // Validate password
         validatePassword(user.getPassword());
-        return userRepository.save(user);
+        return this.userRepository.save(user);
     }
 
     public List<User> getAllUsers() {
-        List<User> users = userRepository.findAll();
+        List<User> users = this.userRepository.findAll();
         System.out.println("Users retrieved from database: " + users);
         return users;
     }
